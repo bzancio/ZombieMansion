@@ -75,6 +75,10 @@ public class ConsoleUI {
         System.out.println("El zombie cae desplomado.");
     }
 
+    public void showZombieAppeared(int zombieNumber) {
+        System.out.println(zombieNumber + " zombie(s) hambiento(s) irrumpe(n) en la habitación");
+    }
+
     public void showPlayerAttack(int damage, int hp) {
         System.out.println("Zombie recibio: " + damage);
         System.out.println("Vida Zombie: " + hp);
@@ -94,6 +98,26 @@ public class ConsoleUI {
 
     public void showNoiseMessage() {
         System.out.println("Upss, hiciste ruido");
+    }
+
+    public void showNoiseIgnored() {
+        System.out.println("Tu ruido fue ignorado, que suerte...");
+    }
+
+    public void showFullKitMessage() {
+        System.out.println("No puedes cargar con mas asi que lo dejas donde lo encontraste");
+    }
+
+    public void showFoundKitMessage() {
+        System.out.println("Encuentras un botiquín tirado por ahí");
+    }
+
+    public void showFoundWeaponMessage() {
+        System.out.println("Es tu dia de suerte, encuentras un arma blanca escondida");
+    }
+
+    public void showFoundProtection() {
+        System.out.println("Encuentras algo precario con lo que cubrirte en caso de ataque");
     }
 
     public void close() {
