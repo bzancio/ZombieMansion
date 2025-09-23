@@ -4,12 +4,7 @@ import actions.ActionResult;
 
 import java.util.List;
 
-public class UIController {
-    private final ConsoleUI consoleUI;
-
-    public UIController(ConsoleUI consoleUI) {
-        this.consoleUI = consoleUI;
-    }
+public record UIController(ConsoleUI consoleUI) {
 
     public void presentAllResults(List<ActionResult> results) {
         for (ActionResult result : results) {
@@ -29,10 +24,13 @@ public class UIController {
                 consoleUI.showZombieAttack(result.data1(), result.data2());
                 break;
             case ZOMBIE_DEFEAT:
+                consoleUI.showZombieDefeat();
                 break;
             case SEARCH_NOISE:
+                consoleUI.showNoiseMessage();
                 break;
             case ADVANCED_ROOM:
+                consoleUI.showNewRoomMessage(result.data1());
                 break;
             case ESCAPED:
                 consoleUI.showEscapeMessage();

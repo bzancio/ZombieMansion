@@ -1,7 +1,6 @@
 package ui;
 
 import actions.Action;
-import actions.ActionResult;
 import game.Difficulty;
 import java.util.List;
 import java.util.Scanner;
@@ -72,13 +71,17 @@ public class ConsoleUI {
         System.out.println("Tu vida: " + hp);
     }
 
+    public void showZombieDefeat() {
+        System.out.println("El zombie cae desplomado");
+    }
+
     public void showPlayerAttack(int damage, int hp) {
         System.out.println("Zombie recibio: " + damage);
         System.out.println("Vida Zombie: " + hp);
     }
 
     public void showNewRoomMessage(int roomNumber) {
-        System.out.println("Avanzas a la habitación" + roomNumber);
+        System.out.println("Avanzas a la habitación " + roomNumber);
     }
 
     public void showEscapeMessage() {
@@ -87,6 +90,10 @@ public class ConsoleUI {
 
     public void showHealMessage() {
         System.out.println("Te has curado");
+    }
+
+    public void showNoiseMessage() {
+        System.out.println("Upss, hiciste ruido");
     }
 
     public void close() {

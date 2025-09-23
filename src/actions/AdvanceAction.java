@@ -15,7 +15,7 @@ public record AdvanceAction(Game game) implements ActionStrategy {
     public List<ActionResult> execute() {
         List<ActionResult> results = new ArrayList<>();
         game.advanceRoom();
-        results.add(new ActionResult(ActionResult.ActionResultType.ADVANCED_ROOM, null, -1, -1));
+        results.add(new ActionResult(ActionResult.ActionResultType.ADVANCED_ROOM, null, game().getCurrentRoomNumber(), -1));
         return results;
     }
 }
