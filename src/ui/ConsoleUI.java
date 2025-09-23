@@ -72,7 +72,7 @@ public class ConsoleUI {
     }
 
     public void showZombieDefeat() {
-        System.out.println("El zombie cae desplomado");
+        System.out.println("El zombie cae desplomado.");
     }
 
     public void showPlayerAttack(int damage, int hp) {
