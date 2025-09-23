@@ -62,7 +62,7 @@ public class ConsoleUI {
         System.out.println("Bienvenido a la mansión zombie");
     }
 
-    public void showGameover() {
+    public void showGameOver() {
         System.out.println("Game Over");
     }
 

@@ -36,7 +36,7 @@ public record UIController(ConsoleUI consoleUI) {
                 consoleUI.showEscapeMessage();
                 break;
             case PLAYER_LOSE:
-                consoleUI.showGameover();
+                consoleUI.showGameOver();
                 break;
         }
     }
