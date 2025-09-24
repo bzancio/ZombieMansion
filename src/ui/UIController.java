@@ -1,6 +1,9 @@
 package ui;
 
 import actions.ActionResult;
+import game.Game;
+import game.Player;
+import game.Room;
 
 import java.util.List;
 
@@ -61,4 +64,19 @@ public record UIController(ConsoleUI consoleUI) {
                 break;
         }
     }
+
+    public void showTurnStatus(Game game) {
+        Player p = game.getPlayer();
+        Room r = game.getCurrentRoom();
+        System.out.println("\n==== Estado actual ====");
+        System.out.println("Habitación: " + game.getCurrentRoomNumber() + "/" + game.getDifficulty().getRoomNumber());
+        System.out.println("Vida del jugador: " + p.getHp());
+        System.out.println("Ataque: " + p.getAttackPoints() + " + Armas: " + p.getNumberWeapons());
+        System.out.println("Protecciones: " + p.getNumberProtections());
+        System.out.println("Botiquín disponible: " + (p.getHasKit() ? "Sí" : "No"));
+        System.out.println("Zombies activos en la habitación: " + r.getActiveZombies());
+        System.out.println("Búsquedas restantes en la habitación: " + r.getRemainingSearchAttemps());
+        System.out.println("=======================\n");
+    }
+
 }

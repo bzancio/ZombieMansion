@@ -27,6 +27,7 @@ public class SearchAction implements ActionStrategy {
     public List<ActionResult> execute() {
         room.setRemainingSearchAttemps(room.getRemainingSearchAttemps() - 1);
         List<ActionResult> results = new ArrayList<>();
+        results.add(new ActionResult(ActionResult.ActionResultType.PLAYER_SEARCHED, null, -1, -1));
         double mainRoll = ThreadLocalRandom.current().nextDouble(0, 100);
 
         if (mainRoll <= 75) {

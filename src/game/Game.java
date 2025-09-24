@@ -1,6 +1,7 @@
 package game;
 
 import actions.*;
+import actions.ActionResult;
 import ui.ConsoleUI;
 import ui.UIController;
 
@@ -21,14 +22,15 @@ public class Game {
         this.uiController = new UIController(consoleUI);
         this.currentRoomNumber = 1;
         this.currentRoom = new Room(currentRoomNumber);
-        consoleUI.showTitle();
         this.difficulty = consoleUI.askDifficulties(List.of(Difficulty.EASY, Difficulty.HARD));
         this.player = new Player();
         this.state = GameState.PLAYING;
     }
 
     public void loop() {
+        consoleUI.showTitle();
         while (state == GameState.PLAYING) {
+            uiController.showTurnStatus(this);
             List<Action> actions = getAvailableActions();
             Action action = consoleUI.askActions(actions);
             ActionStrategy strategy = ActionFactory.create(action, this);
