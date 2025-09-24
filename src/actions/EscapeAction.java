@@ -1,6 +1,8 @@
 package actions;
 
 import game.Game;
+import results.ActionResult;
+import results.EscapedResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,7 @@ public class EscapeAction implements ActionStrategy {
     @Override
     public List<ActionResult> execute() {
         List<ActionResult> results = new ArrayList<>();
-        results.add(new ActionResult(ActionResult.ActionResultType.ESCAPED, null, -1, -1));
+        results.add(new EscapedResult());
         return results;
     }
 }

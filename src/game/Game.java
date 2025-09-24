@@ -1,7 +1,7 @@
 package game;
 
 import actions.*;
-import actions.ActionResult;
+import results.ActionResult;
 import ui.ConsoleUI;
 import ui.UIController;
 
@@ -58,10 +58,11 @@ public class Game {
     }
 
     private void processActionResults(List<ActionResult> results) {
-        if (results.getLast().type() == ActionResult.ActionResultType.PLAYER_LOSE)
-            state = GameState.LOSE;
-        if (results.getLast().type() == ActionResult.ActionResultType.ESCAPED)
-            state = GameState.WIN;
+        ActionResult lastResult = results.getLast();
+        switch (lastResult.getType()) {
+            case PLAYER_LOSE -> state = GameState.LOSE;
+            case ESCAPED -> state = GameState.WIN;
+        }
     }
 
     public void advanceRoom() {

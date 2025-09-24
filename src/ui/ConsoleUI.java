@@ -2,6 +2,11 @@ package ui;
 
 import actions.Action;
 import game.Difficulty;
+import results.AdvancedRoomResult;
+import results.PlayerTurnResult;
+import results.ZombieAppearedResult;
+import results.ZombieTurnResult;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -66,26 +71,26 @@ public class ConsoleUI {
         System.out.println("Game Over");
     }
 
-    public void showZombieAttack(int damage, int hp) {
-        System.out.println("Recibes " + damage);
-        System.out.println("Tu vida: " + hp);
+    public void showZombieAttack(ZombieTurnResult result) {
+        System.out.println("Recibes " + result.getDamage());
+        System.out.println("Tu vida: " + result.getHp());
     }
 
     public void showZombieDefeat() {
         System.out.println("El zombie cae desplomado.");
     }
 
-    public void showZombieAppeared(int zombieNumber) {
-        System.out.println(zombieNumber + " zombie(s) hambiento(s) irrumpe(n) en la habitación");
+    public void showZombieAppeared(ZombieAppearedResult result) {
+        System.out.println(result.getZombieNumber() + " zombie(s) hambiento(s) irrumpe(n) en la habitación");
     }
 
-    public void showPlayerAttack(int damage, int hp) {
-        System.out.println("Zombie recibio: " + damage);
-        System.out.println("Vida Zombie: " + hp);
+    public void showPlayerAttack(PlayerTurnResult result) {
+        System.out.println("Zombie recibio: " + result.getDamage());
+        System.out.println("Vida Zombie: " + result.getHp());
     }
 
-    public void showNewRoomMessage(int roomNumber) {
-        System.out.println("Avanzas a la habitación " + roomNumber);
+    public void showNewRoomMessage(AdvancedRoomResult result) {
+        System.out.println("Avanzas a la habitación " + result.getRoomNumber());
     }
 
     public void showEscapeMessage() {

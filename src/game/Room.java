@@ -3,24 +3,24 @@ package game;
 import java.util.ArrayList;
 
 public class Room {
-    private int remainingSearchAttemps;
+    private int remainingSearchAttempts;
     private int activeZombies;
 
-    private ArrayList<Zombie> zombieArray;
+    private final ArrayList<Zombie> zombieArray;
 
     public Room(int currentRoom) {
         this.zombieArray = new ArrayList<>();
-        this.remainingSearchAttemps = 3;
+        this.remainingSearchAttempts = 3;
         this.activeZombies = 1;
         Zombie z = new Zombie(currentRoom);
         zombieArray.add(z);
     }
 
-    public int getRemainingSearchAttemps() {
-        return remainingSearchAttemps;
+    public int getRemainingSearchAttempts() {
+        return remainingSearchAttempts;
     }
-    public void setRemainingSearchAttemps(int remainingFindAttemps) {
-        this.remainingSearchAttemps = remainingFindAttemps;
+    public void setRemainingSearchAttempts(int remainingSearchAttempts) {
+        this.remainingSearchAttempts = remainingSearchAttempts;
     }
 
     public int getActiveZombies() {

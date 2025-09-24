@@ -2,6 +2,8 @@ package actions;
 
 import game.Game;
 import game.Player;
+import results.ActionResult;
+import results.PlayerHealsResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ public class HealAction implements ActionStrategy {
     public List<ActionResult> execute() {
         List<ActionResult> results = new ArrayList<>();
         player.useKit();
-        results.add(new ActionResult(ActionResult.ActionResultType.PLAYER_HEALS, null, -1, -1));
+        results.add(new PlayerHealsResult());
         return results;
     }
 }
