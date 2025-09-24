@@ -34,15 +34,15 @@ public class FightAction implements ActionStrategy {
     }
 
     private ActionResult playerTurn(Player player, Zombie zombie) {
-        double roll = ThreadLocalRandom.current().nextDouble(0, player.getAttackPoints());
-        int damage = (int)roll + player.getNumberWeapons();
+        int roll = ThreadLocalRandom.current().nextInt(1, player.getAttackPoints() + 1);
+        int damage = roll + player.getNumberWeapons();
         zombie.takeDamage(damage);
         return new ActionResult(ActionResult.ActionResultType.PLAYER_TURN, null, damage, zombie.getHp());
     }
 
     private ActionResult zombieTurn(Zombie zombie, Player player) {
-        double roll = ThreadLocalRandom.current().nextDouble(0, zombie.getAttackPoints());
-        int damage = Math.max(0, (int)roll - player.getNumberProtections());
+        int roll = ThreadLocalRandom.current().nextInt(1, zombie.getAttackPoints()) + 1;
+        int damage = Math.max(0, (roll - player.getNumberProtections()));
         player.takeDamage(damage);
         return new ActionResult(ActionResult.ActionResultType.ZOMBIE_TURN, null, damage, player.getHp());
     }

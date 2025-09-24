@@ -47,8 +47,4 @@ public class Player extends Entity {
             hp = maxHp;
         hasKit = false;
     }
-
-    public void search() {
-        System.out.println("Buscando...");
-    }
 }

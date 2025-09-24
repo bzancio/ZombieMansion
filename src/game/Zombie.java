@@ -5,8 +5,10 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Zombie extends Entity{
 
     public Zombie(int currentRoom) {
-        this.hp = (int)(ThreadLocalRandom.current().nextFloat(0,1) + 2 + (currentRoom - 1));
-        this.attackPoints = (int)(ThreadLocalRandom.current().nextFloat(0,1) + 2 + (currentRoom - 1));
+        int extra = ThreadLocalRandom.current().nextInt(0,2);
+        this.hp = 2 + (currentRoom - 1) + extra;
+        extra = ThreadLocalRandom.current().nextInt(0,2);
+        this.attackPoints = 2 + (currentRoom - 1) + extra;
     }
 
     public int getAttackPoints() {

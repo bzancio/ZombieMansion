@@ -43,14 +43,14 @@ public class Game {
         if (FightAction.isAvailable(this))
             actions.add(Action.FIGHT);
         else {
-            if (HealAction.isAvailable(this))
-                actions.add(Action.HEAL);
             if (SearchAction.isAvailable(this))
                 actions.add(Action.SEARCH);
+            if (HealAction.isAvailable(this))
+                actions.add(Action.HEAL);
             if (AdvanceAction.isAvailable(this))
                 actions.add(Action.ADVANCE);
             if (EscapeAction.isAvailable(this))
-                actions.add(Action.SEARCH);
+                actions.add(Action.ESCAPE);
         }
         return actions;
     }
