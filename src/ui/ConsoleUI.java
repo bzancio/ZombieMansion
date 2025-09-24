@@ -120,6 +120,10 @@ public class ConsoleUI {
         System.out.println("Encuentras algo precario con lo que cubrirte en caso de ataque");
     }
 
+    public void showSearchMessage() {
+        System.out.println("Buscando...");
+    }
+
     public void close() {
         sc.close();
     }

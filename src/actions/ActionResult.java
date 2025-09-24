@@ -4,6 +4,7 @@ public record ActionResult(ActionResultType type, String message, int data1, int
     public enum ActionResultType {
         PLAYER_HEALS,
         PLAYER_TURN,
+        PLAYER_SEARCHED,
         ZOMBIE_TURN,
         ZOMBIE_DEFEAT,
         SEARCH_NOISE,

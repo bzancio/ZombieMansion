@@ -20,6 +20,9 @@ public record UIController(ConsoleUI consoleUI) {
             case PLAYER_TURN:
                 consoleUI.showPlayerAttack(result.data1(), result.data2());
                 break;
+            case PLAYER_SEARCHED:
+                consoleUI.showSearchMessage();
+                break;
             case ZOMBIE_TURN:
                 consoleUI.showZombieAttack(result.data1(), result.data2());
                 break;
