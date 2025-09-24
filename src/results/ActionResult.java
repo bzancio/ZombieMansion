@@ -19,7 +19,8 @@ public abstract class ActionResult {
         ADVANCED_ROOM,
         ESCAPED,
         PLAYER_LOSE,
-        PLAYER_SEARCHED
+        PLAYER_SEARCHED,
+        GAME_STATUS
     }
 }
 

@@ -41,6 +41,10 @@ public class Player extends Entity {
         this.hasKit = hasKit;
     }
 
+    public int getMaxHp() {
+        return maxHp;
+    }
+
     public void useKit() {
         hp += 4;
         if (hp > maxHp)

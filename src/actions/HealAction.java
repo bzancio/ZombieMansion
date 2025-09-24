@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HealAction implements ActionStrategy {
-    Player player;
+    final Player player;
 
     public HealAction(Game game) {
         this.player = game.getPlayer();
