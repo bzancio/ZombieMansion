@@ -8,12 +8,7 @@ import results.PlayerHealsResult;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HealAction implements ActionStrategy {
-    final Player player;
-
-    public HealAction(Game game) {
-        this.player = game.getPlayer();
-    }
+public record HealAction(Player player) implements ActionStrategy {
 
     public static boolean isAvailable(Game game) {
         return !game.getCurrentRoom().hasActiveZombies() && game.getPlayer().getHasKit();
