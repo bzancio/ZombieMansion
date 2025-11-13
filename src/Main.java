@@ -13,8 +13,8 @@ public class Main implements MenuDelegate {
     @Override
     public void startGame(Difficulty difficulty) {
         GameView gameView = new GameView();
-        UIController uiController = new UIController(gameView);
-        Game game = new Game(uiController, difficulty);
+        ViewController viewController = new ViewController(gameView);
+        Game game = new Game(viewController, difficulty);
         gameView.setupGameView(game);
         game.start();
     }

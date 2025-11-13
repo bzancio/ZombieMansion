@@ -1,17 +1,17 @@
-package results;
+package events;
 
-public class ZombieTurnResult extends ActionResult {
+public class ZombieAttackInfo extends GameNotification {
     private final int damage;
     private final int hp;
 
-    public ZombieTurnResult(int damage, int hp) {
+    public ZombieAttackInfo(int damage, int hp) {
         this.damage = damage;
         this.hp = hp;
     }
 
     @Override
-    public ActionResultType getType() {
-        return ActionResultType.ZOMBIE_TURN;
+    public NotificationType getType() {
+        return NotificationType.ZOMBIE_ATTACK;
     }
 
     public int getHp() {

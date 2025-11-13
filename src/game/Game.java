@@ -1,9 +1,9 @@
 package game;
 
 import actions.*;
-import results.ActionResult;
-import results.GameStatusResult;
-import ui.UIController;
+import events.GameNotification;
+import state.GameStatusDTO;
+import ui.ViewController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +14,10 @@ public class Game {
     private Room currentRoom;
     private final Difficulty difficulty;
     private GameState state;
-    private final UIController uiController;
+    private final ViewController viewController;
 
-    public Game(UIController uiController, Difficulty difficulty) {
-        this.uiController = uiController;
+    public Game(ViewController viewController, Difficulty difficulty) {
+        this.viewController = viewController;
         this.difficulty = difficulty;
         this.currentRoomNumber = 1;
         this.currentRoom = new Room(currentRoomNumber);
@@ -26,16 +26,16 @@ public class Game {
     }
 
     public void start() {
-        uiController.presentResult(new GameStatusResult(this));
+        viewController.handleNotification(createGameStatusDTO());
     }
 
     public void performAction(Action action) {
         if (state == GameState.PLAYING) {
             ActionStrategy strategy = ActionFactory.create(action, this);
-            List<ActionResult> results = strategy.execute();
-            uiController.presentAllResults(results);
+            List<GameNotification> results = strategy.execute();
+            viewController.handleAllNotifications(results);
             processActionResults(results);
-            uiController.presentResult(new GameStatusResult(this));
+            viewController.handleNotification(createGameStatusDTO());
         }
     }
 
@@ -56,8 +56,8 @@ public class Game {
         return actions;
     }
 
-    private void processActionResults(List<ActionResult> results) {
-        ActionResult lastResult = results.getLast();
+    private void processActionResults(List<GameNotification> results) {
+        GameNotification lastResult = results.getLast();
         switch (lastResult.getType()) {
             case PLAYER_LOSE -> state = GameState.LOSE;
             case ESCAPED -> state = GameState.WIN;
@@ -83,5 +83,21 @@ public class Game {
 
     public int getCurrentRoomNumber() {
         return currentRoomNumber;
+    }
+
+    private GameStatusDTO createGameStatusDTO() {
+        return new GameStatusDTO(
+                currentRoomNumber,
+                player.hp,
+                player.getMaxHp(),
+                player.getAttackPoints(),
+                player.getNumberWeapons(),
+                player.getNumberProtections(),
+                player.getHasKit(),
+                currentRoom.getActiveZombies(),
+                currentRoom.getRemainingSearchAttempts(),
+                difficulty.getRoomNumber(),
+                getAvailableActions()
+        );
     }
 }

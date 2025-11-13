@@ -1,8 +1,8 @@
 package actions;
 
 import game.Game;
-import results.ActionResult;
-import results.AdvancedRoomResult;
+import events.GameNotification;
+import events.RoomAdvanceInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +14,10 @@ public record AdvanceAction(Game game) implements ActionStrategy {
     }
 
     @Override
-    public List<ActionResult> execute() {
-        List<ActionResult> results = new ArrayList<>();
+    public List<GameNotification> execute() {
+        List<GameNotification> results = new ArrayList<>();
         game.advanceRoom();
-        results.add(new AdvancedRoomResult(game.getCurrentRoomNumber()));
+        results.add(new RoomAdvanceInfo(game.getCurrentRoomNumber()));
         return results;
     }
 }

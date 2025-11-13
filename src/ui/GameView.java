@@ -2,7 +2,7 @@ package ui;
 
 import actions.Action;
 import game.Game;
-import results.GameStatusResult;
+import state.GameStatusDTO;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,7 +65,7 @@ public class GameView extends JFrame {
         return panel;
     }
 
-    public void updateStatus(GameStatusResult result) {
+    public void updateStatus(GameStatusDTO result) {
         hpLabel.setText("Vida: " + result.getPlayerMaxHp());
         roomLabel.setText("Sala Actual: " + result.getCurrentRoomNumber());
         zombieLabel.setText("Zombies: " + result.getRoomActiveZombies());

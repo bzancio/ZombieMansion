@@ -1,9 +1,9 @@
 package actions;
 
+import events.DefaultEventInfo;
 import game.Game;
 import game.Player;
-import results.ActionResult;
-import results.PlayerHealsResult;
+import events.GameNotification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +15,10 @@ public record HealAction(Player player) implements ActionStrategy {
     }
 
     @Override
-    public List<ActionResult> execute() {
-        List<ActionResult> results = new ArrayList<>();
+    public List<GameNotification> execute() {
+        List<GameNotification> results = new ArrayList<>();
         player.useKit();
-        results.add(new PlayerHealsResult());
+        results.add(new DefaultEventInfo(GameNotification.NotificationType.PLAYER_HEALS));
         return results;
     }
 }

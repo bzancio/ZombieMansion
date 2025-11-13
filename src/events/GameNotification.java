@@ -1,15 +1,15 @@
-package results;
+package events;
 
-public abstract class ActionResult {
+public abstract class GameNotification {
 
-    public abstract ActionResultType getType();
+    public abstract NotificationType getType();
 
-    public enum ActionResultType {
-        PLAYER_TURN,
-        ZOMBIE_TURN,
+    public enum NotificationType {
+        PLAYER_ATTACK,
+        ZOMBIE_ATTACK,
         PLAYER_HEALS,
         ZOMBIE_DEFEAT,
-        ZOMBIE_APPEARED,
+        ZOMBIE_SPAWN,
         KIT_FOUND,
         KIT_FULL,
         WEAPON_FOUND,

@@ -1,9 +1,9 @@
 package actions;
 
-import results.ActionResult;
+import events.GameNotification;
 
 import java.util.List;
 
 public interface ActionStrategy {
-    List<ActionResult> execute();
+    List<GameNotification> execute();
 }

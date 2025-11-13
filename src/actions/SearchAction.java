@@ -3,7 +3,7 @@ package actions;
 import game.Game;
 import game.Player;
 import game.Room;
-import results.*;
+import events.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,43 +25,43 @@ public class SearchAction implements ActionStrategy {
     }
 
     @Override
-    public List<ActionResult> execute() {
+    public List<GameNotification> execute() {
         room.setRemainingSearchAttempts(room.getRemainingSearchAttempts() - 1);
-        List<ActionResult> results = new ArrayList<>();
-        results.add(new PlayerSearchedResult());
+        List<GameNotification> results = new ArrayList<>();
+        results.add(new DefaultEventInfo(GameNotification.NotificationType.PLAYER_SEARCHED));
         double mainRoll = ThreadLocalRandom.current().nextDouble(0, 100);
 
         if (mainRoll <= 75) {
-            results.add(new SearchNoiseResult());
+            results.add(new DefaultEventInfo(GameNotification.NotificationType.SEARCH_NOISE));
             results.add(noiseResult());
         } else if (mainRoll <= 90) {
-            results.add(new KitFoundResult());
+            results.add(new DefaultEventInfo(GameNotification.NotificationType.KIT_FOUND));
             if (player.getHasKit()) {
-                results.add(new KitFullResult());
+                results.add(new DefaultEventInfo(GameNotification.NotificationType.KIT_FULL));
             } else
                 player.setHasKit(true);
         } else if (mainRoll <= 95) {
             player.setNumberProtections(player.getNumberProtections() + 1);
-            results.add(new ProtectionFoundResult());
+            results.add(new DefaultEventInfo(GameNotification.NotificationType.PROTECTION_FOUND));
         } else {
             player.setNumberWeapons(player.getNumberWeapons() + 1);
-            results.add(new WeaponFoundResult());
+            results.add(new DefaultEventInfo(GameNotification.NotificationType.WEAPON_FOUND));
         }
         return results;
     }
 
-    private ActionResult noiseResult() {
+    private GameNotification noiseResult() {
         double noiseRoll = ThreadLocalRandom.current().nextDouble(0, 100);
         if (noiseRoll <= 40)
-            return new NoiseIgnoredResult();
+            return new DefaultEventInfo(GameNotification.NotificationType.NOISE_IGNORED);
         room.addZombie(game.getCurrentRoomNumber());
         if (noiseRoll <= 80) {
             room.setActiveZombies(room.getActiveZombies() + 1);
-            return new ZombieAppearedResult(1);
+            return new ZombieSpawnInfo(1);
         } else {
             room.addZombie(game.getCurrentRoomNumber());
             room.setActiveZombies(room.getActiveZombies() + 2);
-            return new ZombieAppearedResult(2);
+            return new ZombieSpawnInfo(2);
         }
     }
 }

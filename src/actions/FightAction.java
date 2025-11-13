@@ -1,7 +1,7 @@
 package actions;
 
 import game.*;
-import results.*;
+import events.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,36 +17,36 @@ public class FightAction implements ActionStrategy {
     }
 
     @Override
-    public List<ActionResult> execute() {
-        List<ActionResult> results = new ArrayList<>();
+    public List<GameNotification> execute() {
+        List<GameNotification> results = new ArrayList<>();
         Zombie zombie = room.getZombieArray().getFirst();
 
         results.add(playerTurn(player, zombie));
         if (zombie.isAlive()) {
             results.add(zombieTurn(zombie, player));
             if (!player.isAlive()) {
-                results.add(new PlayerLoseResult());
+                results.add(new DefaultEventInfo(GameNotification.NotificationType.PLAYER_LOSE));
             }
         } else {
             room.setActiveZombies(room.getActiveZombies() - 1);
             room.deleteZombie();
-            results.add(new ZombieDefeatResult());
+            results.add(new DefaultEventInfo(GameNotification.NotificationType.ZOMBIE_DEFEAT));
         }
         return results;
     }
 
-    private ActionResult playerTurn(Player player, Zombie zombie) {
+    private GameNotification playerTurn(Player player, Zombie zombie) {
         int roll = ThreadLocalRandom.current().nextInt(1, player.getAttackPoints() + 1);
         int damage = roll + player.getNumberWeapons();
         zombie.takeDamage(damage);
-        return new PlayerTurnResult(damage, zombie.getHp());
+        return new PlayerAttackInfo(damage, zombie.getHp());
     }
 
-    private ActionResult zombieTurn(Zombie zombie, Player player) {
+    private GameNotification zombieTurn(Zombie zombie, Player player) {
         int roll = ThreadLocalRandom.current().nextInt(1, zombie.getAttackPoints()) + 1;
         int damage = Math.max(0, (roll - player.getNumberProtections()));
         player.takeDamage(damage);
-        return new ZombieTurnResult(damage, player.getHp());
+        return new ZombieAttackInfo(damage, player.getHp());
     }
 
     public static boolean isAvailable(Game game) {

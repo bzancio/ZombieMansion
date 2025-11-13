@@ -2,7 +2,8 @@ package ui;
 
 import actions.Action;
 import game.Difficulty;
-import results.*;
+import events.*;
+import state.GameStatusDTO;
 
 import java.util.List;
 import java.util.Scanner;
@@ -66,7 +67,7 @@ public class ConsoleUI {
         waitForKey();
     }
 
-    public void showZombieAttack(ZombieTurnResult result) {
+    public void showZombieAttack(ZombieAttackInfo result) {
         showBoxTypeWriter(("Recibes " + result.getDamage() + "\nVida: " + result.getHp()).split("\n"));
         waitForKey();
     }
@@ -76,17 +77,17 @@ public class ConsoleUI {
         waitForKey();
     }
 
-    public void showZombieAppeared(ZombieAppearedResult result) {
+    public void showZombieAppeared(ZombieSpawnInfo result) {
         showBoxTypeWriter(new String[]{result.getZombieNumber() + " zombie(s) hambriento(s) irrumpe(n) en la habitación"});
         waitForKey();
     }
 
-    public void showPlayerAttack(PlayerTurnResult result) {
+    public void showPlayerAttack(PlayerAttackInfo result) {
         showBoxTypeWriter(("Zombie recibió: " + result.getDamage() + "\nVida Zombie: " + result.getHp()).split("\n"));
         waitForKey();
     }
 
-    public void showNewRoomMessage(AdvancedRoomResult result) {
+    public void showNewRoomMessage(RoomAdvanceInfo result) {
         showBoxTypeWriter(new String[]{"Avanzas a la habitación " + result.getRoomNumber()});
         waitForKey();
     }
@@ -136,7 +137,7 @@ public class ConsoleUI {
         waitForKey();
     }
 
-    public void showGameStatus(GameStatusResult result) {
+    public void showGameStatus(GameStatusDTO result) {
         String[] lines = {
                 "ESTADO ACTUAL",
                 "Habitación: " + result.getCurrentRoomNumber() + "/" + result.getMaxRoomNumber(),

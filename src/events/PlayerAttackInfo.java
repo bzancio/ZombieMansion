@@ -1,16 +1,16 @@
-package results;
+package events;
 
-public class PlayerTurnResult extends ActionResult {
+public class PlayerAttackInfo extends GameNotification {
     private final int damage;
     private final int hp;
-    public PlayerTurnResult(int damage, int hp) {
+    public PlayerAttackInfo(int damage, int hp) {
         this.damage = damage;
         this.hp = hp;
     }
 
     @Override
-    public ActionResultType getType() {
-        return ActionResultType.PLAYER_TURN;
+    public NotificationType getType() {
+        return NotificationType.PLAYER_ATTACK;
     }
 
     public int getDamage() {

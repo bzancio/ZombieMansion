@@ -1,8 +1,8 @@
 package actions;
 
+import events.DefaultEventInfo;
 import game.Game;
-import results.ActionResult;
-import results.EscapedResult;
+import events.GameNotification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +14,9 @@ public class EscapeAction implements ActionStrategy {
     }
 
     @Override
-    public List<ActionResult> execute() {
-        List<ActionResult> results = new ArrayList<>();
-        results.add(new EscapedResult());
+    public List<GameNotification> execute() {
+        List<GameNotification> results = new ArrayList<>();
+        results.add(new DefaultEventInfo(GameNotification.NotificationType.ESCAPED));
         return results;
     }
 }
