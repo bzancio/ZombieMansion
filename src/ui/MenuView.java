@@ -5,7 +5,8 @@ import game.Difficulty;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainMenuView extends JFrame {
+public class MenuView extends JFrame {
+    private final MenuDelegate delegate;
     JPanel panel;
     JPanel playRowPanel;
     JButton playButton;
@@ -14,9 +15,11 @@ public class MainMenuView extends JFrame {
     JComboBox<Difficulty> difficultySelector;
     Dimension buttonSize = new Dimension(150,30);
 
-    public MainMenuView() {
-        super("La Mansión Zombie v2");
+    public MenuView(MenuDelegate delegate) {
+        super("La Mansión Zombie v2 - Menu");
+        this.delegate = delegate;
         setupWindow();
+        setupListeners();
     }
 
     public void setupWindow() {
@@ -59,7 +62,20 @@ public class MainMenuView extends JFrame {
         this.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        MainMenuView xd = new MainMenuView();
+    public void setupListeners() {
+        playButton.addActionListener(e -> {
+            Difficulty selectedDifficulty = (Difficulty) difficultySelector.getSelectedItem();
+            this.setVisible(false);
+            this.dispose();
+            delegate.startGame(selectedDifficulty);
+        });
+
+        loadButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, "Not implemented yet");
+        });
+
+        historicButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, "Not implemented yet");
+        });
     }
 }

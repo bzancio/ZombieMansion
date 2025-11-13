@@ -1,6 +1,9 @@
 package results;
 
+import actions.Action;
 import game.Game;
+
+import java.util.List;
 
 public class GameStatusResult extends ActionResult {
     private final Game game;
@@ -52,5 +55,9 @@ public class GameStatusResult extends ActionResult {
 
     public int getMaxRoomNumber() {
         return game.getDifficulty().getRoomNumber();
+    }
+
+    public List<Action> getAvailableActions() {
+         return game.getAvailableActions();
     }
 }

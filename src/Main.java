@@ -1,11 +1,31 @@
+import game.Difficulty;
 import game.Game;
-import ui.ConsoleUI;
+import ui.*;
 
-public class Main {
+import javax.swing.*;
+
+public class Main implements MenuDelegate {
     public static void main(String[] args) {
-        ConsoleUI consoleUI = new ConsoleUI();
-        Game game = new Game(consoleUI);
-        game.loop();
-        consoleUI.close();
+        Main app = new Main();
+        SwingUtilities.invokeLater(() -> new MenuView(app));
+    }
+
+    @Override
+    public void startGame(Difficulty difficulty) {
+        GameView gameView = new GameView();
+        UIController uiController = new UIController(gameView);
+        Game game = new Game(uiController, difficulty);
+        gameView.setupGameView(game);
+        game.start();
+    }
+
+    @Override
+    public void loadGame() {
+
+    }
+
+    @Override
+    public void viewHistory() {
+
     }
 }

@@ -3,7 +3,6 @@ package game;
 import actions.*;
 import results.ActionResult;
 import results.GameStatusResult;
-import ui.ConsoleUI;
 import ui.UIController;
 
 import java.util.ArrayList;
@@ -15,33 +14,32 @@ public class Game {
     private Room currentRoom;
     private final Difficulty difficulty;
     private GameState state;
-    private final ConsoleUI consoleUI;
     private final UIController uiController;
 
-    public Game(ConsoleUI consoleUI) {
-        this.consoleUI = consoleUI;
-        this.uiController = new UIController(consoleUI);
+    public Game(UIController uiController, Difficulty difficulty) {
+        this.uiController = uiController;
+        this.difficulty = difficulty;
         this.currentRoomNumber = 1;
         this.currentRoom = new Room(currentRoomNumber);
-        this.difficulty = consoleUI.askDifficulty(List.of(Difficulty.EASY, Difficulty.HARD));
         this.player = new Player();
         this.state = GameState.PLAYING;
     }
 
-    public void loop() {
-        consoleUI.showTitle();
-        while (state == GameState.PLAYING) {
-            consoleUI.showGameStatus(new GameStatusResult(this));
-            List<Action> actions = getAvailableActions();
-            Action action = consoleUI.askAction(actions);
+    public void start() {
+        uiController.presentResult(new GameStatusResult(this));
+    }
+
+    public void performAction(Action action) {
+        if (state == GameState.PLAYING) {
             ActionStrategy strategy = ActionFactory.create(action, this);
             List<ActionResult> results = strategy.execute();
             uiController.presentAllResults(results);
             processActionResults(results);
+            uiController.presentResult(new GameStatusResult(this));
         }
     }
 
-    private List<Action> getAvailableActions() {
+    public List<Action> getAvailableActions() {
         List<Action> actions = new ArrayList<>();
         if (FightAction.isAvailable(this))
             actions.add(Action.FIGHT);
