@@ -1,52 +1,21 @@
 package actions;
 
 import events.*;
+import game.Game;
+import game.Player;
+import game.Room;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Consumer;
-import java.util.function.BiConsumer;
 
 public class SearchAction implements ActionStrategy {
-    private final Consumer<Integer> setRemainingSearchAttempts;
-    private final Consumer<Boolean> setPlayerHasKit;
-    private final Consumer<Integer> setPlayerNumberProtections;
-    private final Consumer<Integer> setPlayerNumberWeapons;
-    private final BiConsumer<Integer, Integer> addZombieFunction;
-    private final Consumer<Integer> setActiveZombiesFunction;
-    private final boolean playerHasKit;
-    private final int remainingSearchAttempts;
-    private final int playerNumberProtections;
-    private final int playerNumberWeapons;
-    private final int roomActiveZombies;
-    private final int currentRoomNumber;
+    private final Room room;
+    private final Player player;
 
-    public SearchAction(Consumer<Integer> setRemainingSearchAttempts,
-                        Consumer<Boolean> setPlayerHasKit,
-                        Consumer<Integer> setPlayerNumberProtections,
-                        Consumer<Integer> setPlayerNumberWeapons,
-                        BiConsumer<Integer, Integer> addZombieFunction,
-                        Consumer<Integer> setActiveZombiesFunction,
-                        boolean playerHasKit,
-                        int remainingSearchAttempts,
-                        int playerNumberProtections,
-                        int playerNumberWeapons,
-                        int roomActiveZombies,
-                        int currentRoomNumber
-    ) {
-        this.setRemainingSearchAttempts = setRemainingSearchAttempts;
-        this.setPlayerHasKit = setPlayerHasKit;
-        this.setPlayerNumberProtections = setPlayerNumberProtections;
-        this.setPlayerNumberWeapons = setPlayerNumberWeapons;
-        this.addZombieFunction = addZombieFunction;
-        this.setActiveZombiesFunction = setActiveZombiesFunction;
-        this.playerHasKit = playerHasKit;
-        this.remainingSearchAttempts = remainingSearchAttempts;
-        this.playerNumberProtections = playerNumberProtections;
-        this.playerNumberWeapons = playerNumberWeapons;
-        this.roomActiveZombies = roomActiveZombies;
-        this.currentRoomNumber = currentRoomNumber;
+    public SearchAction(Game game) {
+        this.room = game.getRoom();
+        this.player = game.getPlayer();
     }
 
     public static boolean isAvailable(boolean roomHasActiveZombies, int remainingSearchAttempts) {
@@ -55,7 +24,7 @@ public class SearchAction implements ActionStrategy {
 
     @Override
     public List<GameNotification> execute() {
-        setRemainingSearchAttempts.accept(remainingSearchAttempts - 1);
+        room.setRemainingSearchAttempts(room.getRemainingSearchAttempts() - 1);
         List<GameNotification> results = new ArrayList<>();
         results.add(new DefaultEventInfo(GameNotification.NotificationType.PLAYER_SEARCHED));
         double mainRoll = ThreadLocalRandom.current().nextDouble(0, 100);
@@ -65,15 +34,15 @@ public class SearchAction implements ActionStrategy {
             results.add(noiseResult());
         } else if (mainRoll <= 90) {
             results.add(new DefaultEventInfo(GameNotification.NotificationType.KIT_FOUND));
-            if (playerHasKit) {
+            if (player.getHasKit()) {
                 results.add(new DefaultEventInfo(GameNotification.NotificationType.KIT_FULL));
             } else
-                setPlayerHasKit.accept(true);
+                player.setHasKit(true);
         } else if (mainRoll <= 95) {
-            setPlayerNumberProtections.accept(playerNumberProtections + 1);
+            player.setNumberProtections(player.getNumberProtections() + 1);
             results.add(new DefaultEventInfo(GameNotification.NotificationType.PROTECTION_FOUND));
         } else {
-            setPlayerNumberWeapons.accept(playerNumberWeapons + 1);
+            player.setNumberWeapons(player.getNumberWeapons() + 1);
             results.add(new DefaultEventInfo(GameNotification.NotificationType.WEAPON_FOUND));
         }
         return results;
@@ -84,17 +53,13 @@ public class SearchAction implements ActionStrategy {
         if (noiseRoll <= 40)
             return new DefaultEventInfo(GameNotification.NotificationType.NOISE_IGNORED);
 
-        // La lógica de añadir zombis debe estar aquí
+        room.addZombie(room.getRoomNumber());
         if (noiseRoll <= 80) {
-            // Añadir un zombie (usando la función inyectada BiConsumer<Integer, Integer>)
-            addZombieFunction.accept(1, currentRoomNumber);
-            // Actualizar el conteo de zombis activos (usando la función inyectada Consumer<Integer>)
-            setActiveZombiesFunction.accept(roomActiveZombies + 1);
+            room.setActiveZombies(room.getActiveZombies() + 1);
             return new ZombieSpawnInfo(1);
         } else {
-            // Añadir dos zombies
-            addZombieFunction.accept(2, currentRoomNumber);
-            setActiveZombiesFunction.accept(roomActiveZombies + 2);
+            room.addZombie(room.getRoomNumber());
+            room.setActiveZombies(room.getActiveZombies() + 2);
             return new ZombieSpawnInfo(2);
         }
     }

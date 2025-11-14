@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Room {
     private int remainingSearchAttempts;
     private int activeZombies;
-    private int roomNumber;
+    private final int roomNumber;
 
     private final ArrayList<Zombie> zombieArray;
 

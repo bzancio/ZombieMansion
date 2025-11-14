@@ -5,7 +5,6 @@ import events.GameNotification;
 import state.GameStatusDTO;
 import ui.ViewController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
@@ -24,6 +23,7 @@ public class Game {
     }
 
     public void start() {
+        viewController.handleStatusUpdate(createGameStatusDTO());
     }
 
     public void performAction(Action action) {
@@ -32,6 +32,7 @@ public class Game {
             List<GameNotification> results = strategy.execute();
             viewController.handleAllNotifications(results);
             processActionResults(results);
+            viewController.handleStatusUpdate(createGameStatusDTO());
         }
     }
 
@@ -57,10 +58,6 @@ public class Game {
 
     public Difficulty getDifficulty() {
         return difficulty;
-    }
-
-    public int getCurrentRoomNumber() {
-        return room.getRoomNumber();
     }
 
     private GameStatusDTO createGameStatusDTO() {

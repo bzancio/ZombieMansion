@@ -1,6 +1,8 @@
 package ui;
 
 import actions.Action;
+import events.RoomAdvanceInfo;
+import events.ZombieSpawnInfo;
 import game.Game;
 import state.GameStatusDTO;
 
@@ -15,6 +17,10 @@ public class GameView extends JFrame {
     private final JLabel hpLabel;
     private final JLabel roomLabel;
     private final JLabel zombieLabel;
+    private final JLabel weaponsNumberLabel;
+    private final JLabel protectionsNumberLabel;
+    private final JLabel hasKitLabel;
+    private final JLabel attemptsLabel;
 
     public GameView() {
         super("La Mansión Zombie v2 - Partida");
@@ -23,7 +29,11 @@ public class GameView extends JFrame {
         this.actionButtons = new HashMap<>();
         this.hpLabel = new JLabel("Vida: ---");
         this.roomLabel = new JLabel("Sala Actual: ---");
+        this.protectionsNumberLabel = new JLabel("Protecciones: ---");
+        this.weaponsNumberLabel = new JLabel("Armas: ---");
+        this.hasKitLabel = new JLabel("Botiquin: ---");
         this.zombieLabel = new JLabel("Zombies: ---");
+        this.attemptsLabel = new JLabel("Intentos: ");
     }
 
     public void setupGameView(Game game) {
@@ -38,14 +48,14 @@ public class GameView extends JFrame {
 
     private JPanel createStatusPanel() {
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(7, 1, 10, 5));
+        panel.setLayout(new GridLayout(8, 1, 10, 5));
         panel.add(this.hpLabel);
         panel.add(this.roomLabel);
-        panel.add(new JLabel("Armas: [X]"));
-        panel.add(new JLabel("Protecciones: [X]"));
+        panel.add(this.attemptsLabel);
+        panel.add(this.protectionsNumberLabel);
+        panel.add(this.weaponsNumberLabel);
+        panel.add(this.hasKitLabel);
         panel.add(this.zombieLabel);
-        panel.add(new JLabel("Búsquedas: [X]"));
-        panel.add(new JLabel("Kit: [Sí/No]"));
         return panel;
     }
 
@@ -65,18 +75,38 @@ public class GameView extends JFrame {
         return panel;
     }
 
-    public void updateStatus(GameStatusDTO result) {
-        hpLabel.setText("Vida: " + result.getPlayerMaxHp());
-        roomLabel.setText("Sala Actual: " + result.getCurrentRoomNumber());
-        zombieLabel.setText("Zombies: " + result.getRoomActiveZombies());
+    public void updateStatus(GameStatusDTO gameStatusDTO) {
+        hpLabel.setText("Vida: " + gameStatusDTO.playerHp() + "/" + gameStatusDTO.playerMaxHp());
+        roomLabel.setText("Habitación (max " + gameStatusDTO.maxRoomNumber() + "): " + gameStatusDTO.currentRoomNumber());
+        zombieLabel.setText("Zombies: " + gameStatusDTO.roomActiveZombies());
+        protectionsNumberLabel.setText("Protecciones: " + gameStatusDTO.playerNumberProtections());
+        weaponsNumberLabel.setText("Armas: " + gameStatusDTO.playerNumberWeapons());
+        attemptsLabel.setText("Intentos: " + gameStatusDTO.roomRemainingSearches());
+        hasKitLabel.setText("Botiquin: " + (gameStatusDTO.playerHasKit() ? "Si" : "No"));
 
         for (Map.Entry<Action, JButton> entry : actionButtons.entrySet()) {
             Action currentAction = entry.getKey();
             JButton button = entry.getValue();
 
-            boolean isAvailable = result.getAvailableActions().contains(currentAction);
+            boolean isAvailable = gameStatusDTO.availableActions().contains(currentAction);
 
             button.setEnabled(isAvailable);
         }
+    }
+    public void showZombieSpawned(ZombieSpawnInfo zombieSpawnInfo) {
+        JOptionPane.showMessageDialog(null, "Aparece un zombie" , "xd", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void showAdvanceRoom(RoomAdvanceInfo roomAdvanceInfo) {
+        JOptionPane.showMessageDialog(null, "Avanzaste a la habitación " + (roomAdvanceInfo.getRoomNumber() + 1), "Avance", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void showDefaultEventInfo(String title, String eventInfo) {
+        JOptionPane.showMessageDialog(
+                null,
+                eventInfo,
+                title,
+                JOptionPane.INFORMATION_MESSAGE
+        );
     }
 }

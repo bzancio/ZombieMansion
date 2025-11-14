@@ -11,19 +11,19 @@ public record ViewController(GameView gameView) {
         switch (notification.getType()) {
             case PLAYER_ATTACK -> System.out.println("turno player");//consoleUI.showPlayerAttack((PlayerTurnResult) result);//
             case ZOMBIE_ATTACK -> System.out.println("turno zombie");//consoleUI.showZombieAttack((ZombieTurnResult) result);
-            case PLAYER_HEALS -> System.out.println("jugador curación");//consoleUI.showHealMessage();
-            case ZOMBIE_DEFEAT -> System.out.println("zombie derrotado");//consoleUI.showZombieDefeat();
-            case ZOMBIE_SPAWN -> System.out.println("zombie aparece");//consoleUI.showZombieAppeared((ZombieAppearedResult) result);
-            case KIT_FOUND -> System.out.println("kit encontrado");//consoleUI.showFoundKitMessage();
-            case KIT_FULL -> System.out.println("kit lleno");//consoleUI.showFullKitMessage();
-            case WEAPON_FOUND -> System.out.println("arma encontrada");//consoleUI.showFoundWeaponMessage();
-            case PROTECTION_FOUND -> System.out.println("proteccion encontrada");//consoleUI.showFoundProtection();
-            case SEARCH_NOISE -> System.out.println("ruido al buscar");//consoleUI.showNoiseMessage();
-            case NOISE_IGNORED -> System.out.println("ruido ignorado");//consoleUI.showNoiseIgnored();
-            case ADVANCED_ROOM -> System.out.println("avance habitación");//consoleUI.showNewRoomMessage((AdvancedRoomResult)result);
-            case ESCAPED -> System.out.println("escape");//consoleUI.showEscapeMessage();
-            case PLAYER_LOSE -> System.out.println("derrota");//consoleUI.showGameOver();
-            case PLAYER_SEARCHED -> System.out.println("busqueda");//consoleUI.showSearchMessage();
+            case PLAYER_HEALS -> gameView.showDefaultEventInfo("Curación", "Te has curado");
+            case ZOMBIE_DEFEAT -> gameView.showDefaultEventInfo("Zombie", "El zombie cae Desplomado");
+            case ZOMBIE_SPAWN -> gameView.showZombieSpawned((ZombieSpawnInfo)notification);//consoleUI.showZombieAppeared((ZombieAppearedResult) result);
+            case KIT_FOUND -> gameView.showDefaultEventInfo("Kit", "Has encontrado un kit");
+            case KIT_FULL -> gameView.showDefaultEventInfo("Kit", "Ya tienes un kit");
+            case WEAPON_FOUND -> gameView.showDefaultEventInfo("Arma", "Has encontrado un arma");
+            case PROTECTION_FOUND -> gameView.showDefaultEventInfo("Proteccion", "Has encontrado una proteccion");
+            case SEARCH_NOISE -> gameView.showDefaultEventInfo("Ruido", "Upps hiciste ruido");
+            case NOISE_IGNORED -> gameView.showDefaultEventInfo("Ruido ignorado", "Tu ruido fue ignorado");
+            case ADVANCED_ROOM -> gameView.showAdvanceRoom((RoomAdvanceInfo)notification);
+            case ESCAPED -> gameView.showDefaultEventInfo("Escapaste", "Felicidades, has sobrevivido");
+            case PLAYER_LOSE -> gameView.showDefaultEventInfo("Muerte", "Ahora formas parte de la mansión");
+            case PLAYER_SEARCHED -> gameView.showDefaultEventInfo("Busqueda", "Empiezas a inspeccionar la habitación");
         }
     }
 
@@ -31,5 +31,9 @@ public record ViewController(GameView gameView) {
         for (GameNotification result : results) {
             handleNotification(result);
         }
+    }
+
+    public void handleStatusUpdate(GameStatusDTO gameStatusDTO) {
+        gameView.updateStatus(gameStatusDTO);
     }
 }
