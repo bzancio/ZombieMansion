@@ -1,7 +1,6 @@
 package actions;
 
 import events.DefaultEventInfo;
-import game.Game;
 import events.GameNotification;
 
 import java.util.ArrayList;
@@ -9,8 +8,8 @@ import java.util.List;
 
 public class EscapeAction implements ActionStrategy {
 
-    public static boolean isAvailable(Game game) {
-        return !game.getCurrentRoom().hasActiveZombies() && (game.getCurrentRoomNumber() == game.getDifficulty().getRoomNumber());
+    public static boolean isAvailable(boolean roomHasActiveZombies, int roomNumber, int maxRoomNumber) {
+        return !roomHasActiveZombies && (roomNumber == maxRoomNumber);
     }
 
     @Override

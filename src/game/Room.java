@@ -5,15 +5,21 @@ import java.util.ArrayList;
 public class Room {
     private int remainingSearchAttempts;
     private int activeZombies;
+    private int roomNumber;
 
     private final ArrayList<Zombie> zombieArray;
 
     public Room(int currentRoom) {
+        this.roomNumber = currentRoom;
         this.zombieArray = new ArrayList<>();
         this.remainingSearchAttempts = 3;
         this.activeZombies = 1;
-        Zombie z = new Zombie(currentRoom);
+        Zombie z = new Zombie(roomNumber);
         zombieArray.add(z);
+    }
+
+    public int getRoomNumber() {
+        return roomNumber;
     }
 
     public int getRemainingSearchAttempts() {

@@ -24,7 +24,6 @@ public record ViewController(GameView gameView) {
             case ESCAPED -> System.out.println("escape");//consoleUI.showEscapeMessage();
             case PLAYER_LOSE -> System.out.println("derrota");//consoleUI.showGameOver();
             case PLAYER_SEARCHED -> System.out.println("busqueda");//consoleUI.showSearchMessage();
-            case GAME_STATUS -> gameView.updateStatus((GameStatusDTO)notification);//consoleUI.showGameStatus((GameStatusResult)result);
         }
     }
 

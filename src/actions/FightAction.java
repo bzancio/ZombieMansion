@@ -12,7 +12,7 @@ public class FightAction implements ActionStrategy {
     private final Player player;
 
     public FightAction(Game game) {
-        this.room = game.getCurrentRoom();
+        this.room = game.getRoom();
         this.player = game.getPlayer();
     }
 
@@ -49,7 +49,7 @@ public class FightAction implements ActionStrategy {
         return new ZombieAttackInfo(damage, player.getHp());
     }
 
-    public static boolean isAvailable(Game game) {
-        return game.getCurrentRoom().hasActiveZombies();
+    public static boolean isAvailable(boolean roomHasZombies) {
+        return roomHasZombies;
     }
 }
