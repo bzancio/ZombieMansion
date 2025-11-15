@@ -25,12 +25,13 @@ public class MenuView extends JFrame {
     public void setupWindow() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(panel = new JPanel());
-        this.setPreferredSize(new Dimension(500,300));
+        this.setPreferredSize(new Dimension(600,350));
         this.setResizable(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         playButton = new JButton("Jugar");
         playButton.setPreferredSize(buttonSize);
+
         difficultySelector = new JComboBox<>(Difficulty.values());
         difficultySelector.setPreferredSize(buttonSize);
 
@@ -64,7 +65,7 @@ public class MenuView extends JFrame {
 
     public void setupListeners() {
         playButton.addActionListener(e -> {
-            Difficulty selectedDifficulty = (Difficulty) difficultySelector.getSelectedItem();
+            Difficulty selectedDifficulty = (Difficulty)difficultySelector.getSelectedItem();
             this.setVisible(false);
             this.dispose();
             delegate.startGame(selectedDifficulty);

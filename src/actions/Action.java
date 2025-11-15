@@ -4,8 +4,8 @@ public enum Action {
     FIGHT("Luchar"),
     SEARCH("Buscar"),
     ADVANCE("Avanzar"),
-    ESCAPE("Escapar"),
-    HEAL("Curarse");
+    HEAL("Curarse"),
+    ESCAPE("Escapar");
 
     private final String label;
 
