@@ -4,6 +4,7 @@ import actions.Action;
 import events.*;
 import game.Difficulty;
 import game.Game;
+import persistence.GameSaver;
 import state.GameStatusDTO;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class ViewController implements MenuDelegate, GameDelegate, CombatDelegat
 
     public void handleNotification(GameNotification notification) {
         switch (notification.getType()) {
-            case PLAYER_ATTACK -> combatView.updateCombatLog((PlayerAttackInfo) notification);
+            case PLAYER_ATTACK -> combatView.updateCombatLog((PlayerAttackInfo)notification);
             case ZOMBIE_ATTACK -> combatView.updateCombatLog((ZombieAttackInfo)notification);
             case PLAYER_HEALS -> gameView.showDefaultEventInfo("Curación", "Te has curado");
             case ZOMBIE_DEFEAT -> gameView.showDefaultEventInfo("Zombie", "El zombie cae Desplomado");
@@ -49,7 +50,8 @@ public class ViewController implements MenuDelegate, GameDelegate, CombatDelegat
     }
 
     public void handleCombatStatusUpdate(GameStatusDTO gameStatusDTO) {
-        combatView.updateStatus(gameStatusDTO);
+        if (this.combatView != null)
+            combatView.updateStatus(gameStatusDTO);
     }
 
     private void closeGame() {
@@ -94,12 +96,29 @@ public class ViewController implements MenuDelegate, GameDelegate, CombatDelegat
 
     @Override
     public void loadGame() {
+        Game loadedGame = GameSaver.loadGame();
+        if (loadedGame != null) {
+            menuView.setVisible(false);
+            this.game = loadedGame;
+            this.game.setViewController(this);
 
+            this.gameView = new GameView(this);
+            this.gameView.setupWindow();
+
+            this.gameView.updateStatus(GameStatusDTO.buildFrom(this.game));
+
+            gameView.showDefaultEventInfo("Carga", "Partida cargada correctamente.");
+        } else {
+            menuView.showDefaultEventInfo("Carga", "No hay partida guardada para cargar.");
+        }
     }
 
     @Override
     public void viewHistory() {
+        List<GameStatusDTO> history = GameSaver.loadHistory();
 
+        HistoryView historyView = new HistoryView(menuView, history);
+        historyView.showView();
     }
 
     @Override
@@ -118,6 +137,14 @@ public class ViewController implements MenuDelegate, GameDelegate, CombatDelegat
     @Override
     public void exitGameView() {
         handlePlayerWin();
+    }
+
+    @Override
+    public void handleSaveGame() {
+        if (this.game != null) {
+            GameSaver.saveGame(this.game);
+            gameView.showDefaultEventInfo("Guardado", "Partida guardada con exito");
+        }
     }
 
     @Override

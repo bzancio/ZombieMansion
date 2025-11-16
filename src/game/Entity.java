@@ -1,6 +1,8 @@
 package game;
 
-public class Entity {
+import java.io.Serializable;
+
+public class Entity implements Serializable {
     protected int hp;
     protected int attackPoints;
 

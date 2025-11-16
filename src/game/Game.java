@@ -2,15 +2,17 @@ package game;
 
 import actions.*;
 import events.GameNotification;
+import persistence.GameSaver;
 import state.GameStatusDTO;
 import ui.ViewController;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Game {
+public class Game implements Serializable {
     private final Player player;
     private final Difficulty difficulty;
-    private final ViewController viewController;
+    private transient ViewController viewController;
     private Room room;
     private GameState state;
 
@@ -50,9 +52,11 @@ public class Game {
 
             if (state == GameState.LOSE) {
                 viewController.prepareCombatViewForLoss();
+                GameSaver.saveSnapshot(createGameStatusDTO());
                 return;
             }
             viewController.handleStatusUpdate(createGameStatusDTO());
+            GameSaver.saveSnapshot(createGameStatusDTO());
             viewController.handlePlayerWin();
         }
     }
@@ -64,7 +68,6 @@ public class Game {
     public Player getPlayer() {
         return player;
     }
-
     public Room getRoom() {
         return room;
     }
@@ -75,5 +78,9 @@ public class Game {
 
     private GameStatusDTO createGameStatusDTO() {
         return GameStatusDTO.buildFrom(this);
+    }
+
+    public void setViewController(ViewController viewController) {
+        this.viewController = viewController;
     }
 }

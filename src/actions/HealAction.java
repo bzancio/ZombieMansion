@@ -1,8 +1,6 @@
 package actions;
 
 import events.DefaultEventInfo;
-import game.Game;
-import game.Player;
 import events.GameNotification;
 
 import java.util.ArrayList;

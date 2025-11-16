@@ -1,6 +1,5 @@
 package actions;
 
-import game.Game;
 import events.GameNotification;
 import events.RoomAdvanceInfo;
 

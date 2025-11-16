@@ -2,8 +2,6 @@ package actions;
 
 import game.Game;
 
-import java.util.function.BiConsumer;
-
 public class ActionFactory {
     public static ActionStrategy create(Action action, Game game) {
         return switch (action) {

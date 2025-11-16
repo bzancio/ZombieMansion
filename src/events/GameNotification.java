@@ -20,7 +20,6 @@ public abstract class GameNotification {
         ESCAPED,
         PLAYER_LOSE,
         PLAYER_SEARCHED,
-        GAME_STATUS
     }
 }
 

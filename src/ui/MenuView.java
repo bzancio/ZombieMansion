@@ -74,8 +74,17 @@ public class MenuView extends JFrame {
             menuDelegate.showGameView(selectedDifficulty);
         });
 
-        loadButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Not implemented yet"));
+        loadButton.addActionListener(e -> menuDelegate.loadGame());
 
-        historicButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Not implemented yet"));
+        historicButton.addActionListener(e -> menuDelegate.viewHistory());
+    }
+
+    public void showDefaultEventInfo(String title, String eventInfo) {
+        JOptionPane.showMessageDialog(
+                null,
+                eventInfo,
+                title,
+                JOptionPane.INFORMATION_MESSAGE
+        );
     }
 }

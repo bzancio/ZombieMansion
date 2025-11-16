@@ -1,8 +1,9 @@
 package game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Room {
+public class Room implements Serializable {
     private int remainingSearchAttempts;
     private int activeZombies;
     private final int roomNumber;

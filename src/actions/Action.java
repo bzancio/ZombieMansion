@@ -1,6 +1,8 @@
 package actions;
 
-public enum Action {
+import java.io.Serializable;
+
+public enum Action implements Serializable {
     FIGHT("Luchar"),
     SEARCH("Buscar"),
     ADVANCE("Avanzar"),

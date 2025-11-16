@@ -6,4 +6,5 @@ public interface GameDelegate {
     void handleGameAction(Action action);
     void showCombatView();
     void exitGameView();
+    void handleSaveGame();
 }

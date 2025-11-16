@@ -10,13 +10,14 @@ import game.Game;
 import game.Player;
 import game.Room;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public record GameStatusDTO(int currentRoomNumber, int playerHp, int playerMaxHp, int playerAttackPoints,
                             int playerNumberWeapons, int playerNumberProtections, boolean playerHasKit,
                             int roomActiveZombies, int roomRemainingSearches, int maxRoomNumber, int zombieHp, int zombieAttackPoints,
-                            List<Action> availableActions) {
+                            List<Action> availableActions) implements Serializable {
 
     public static GameStatusDTO buildFrom(Game game) {
 

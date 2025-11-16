@@ -105,19 +105,7 @@ public class GameView extends JFrame {
         JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 15));
 
         for (Action action : Action.values()) {
-            JButton actionButton = new JButton(action.getLabel());
-            actionButton.setPreferredSize(new Dimension(100, 30));
-
-            if (action == Action.FIGHT) {
-                actionButton.addActionListener(e -> gameDelegate.showCombatView());
-            }
-            else {
-                actionButton.addActionListener(e -> {
-                    if (gameDelegate != null) {
-                        gameDelegate.handleGameAction(action);
-                    }
-                });
-            }
+            JButton actionButton = getJButton(action);
             this.actionButtons.put(action, actionButton);
             actionPanel.add(actionButton);
         }
@@ -132,12 +120,29 @@ public class GameView extends JFrame {
         return actionPanel;
     }
 
+    private JButton getJButton(Action action) {
+        JButton actionButton = new JButton(action.getLabel());
+        actionButton.setPreferredSize(new Dimension(100, 30));
+
+        if (action == Action.FIGHT) {
+            actionButton.addActionListener(e -> gameDelegate.showCombatView());
+        }
+        else {
+            actionButton.addActionListener(e -> {
+                if (gameDelegate != null) {
+                    gameDelegate.handleGameAction(action);
+                }
+            });
+        }
+        return actionButton;
+    }
+
     private JPanel createSavePanel() {
         JPanel savePanel = new JPanel();
         savePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         savePanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         saveButton.setPreferredSize(new Dimension(100, 30));
-        saveButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Not implemented yet"));
+        saveButton.addActionListener(e -> gameDelegate.handleSaveGame());
         savePanel.add(saveButton);
         return savePanel;
     }
