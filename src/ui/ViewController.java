@@ -1,11 +1,20 @@
 package ui;
 
 import events.*;
+import game.Difficulty;
+import game.Game;
 import state.GameStatusDTO;
 
 import java.util.List;
 
-public record ViewController(GameView gameView) {
+public class ViewController implements MenuDelegate {
+    private final MenuView menuView;
+    private GameView gameView;
+    private Game game;
+
+    public ViewController(MenuView menuView) {
+        this.menuView = menuView;
+    }
 
     public void handleNotification(GameNotification notification) {
         switch (notification.getType()) {
@@ -13,7 +22,7 @@ public record ViewController(GameView gameView) {
             case ZOMBIE_ATTACK -> System.out.println("turno zombie");//consoleUI.showZombieAttack((ZombieTurnResult) result);
             case PLAYER_HEALS -> gameView.showDefaultEventInfo("Curación", "Te has curado");
             case ZOMBIE_DEFEAT -> gameView.showDefaultEventInfo("Zombie", "El zombie cae Desplomado");
-            case ZOMBIE_SPAWN -> gameView.showZombieSpawned((ZombieSpawnInfo)notification);//consoleUI.showZombieAppeared((ZombieAppearedResult) result);
+            case ZOMBIE_SPAWN -> gameView.showZombieSpawned((ZombieSpawnInfo)notification);
             case KIT_FOUND -> gameView.showDefaultEventInfo("Kit", "Has encontrado un kit");
             case KIT_FULL -> gameView.showDefaultEventInfo("Kit", "Ya tienes un kit");
             case WEAPON_FOUND -> gameView.showDefaultEventInfo("Arma", "Has encontrado un arma");
@@ -35,5 +44,28 @@ public record ViewController(GameView gameView) {
 
     public void handleStatusUpdate(GameStatusDTO gameStatusDTO) {
         gameView.updateStatus(gameStatusDTO);
+    }
+
+    public void handleEndGame() {
+        gameView.dispose();
+        menuView.setVisible(true);
+    }
+
+    @Override
+    public void startGame(Difficulty difficulty) {
+        menuView.setVisible(false);
+        this.gameView = new GameView();
+        this.game = new Game(this, difficulty);
+        gameView.setupGameView(game);
+    }
+
+    @Override
+    public void loadGame() {
+
+    }
+
+    @Override
+    public void viewHistory() {
+
     }
 }

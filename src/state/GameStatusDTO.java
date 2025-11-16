@@ -49,7 +49,7 @@ public record GameStatusDTO(int currentRoomNumber, int playerHp, int playerMaxHp
         if (FightAction.isAvailable(roomHasZombies)) {
             actions.add(Action.FIGHT);
         } else {
-            if (SearchAction.isAvailable(player.getHasKit(), room.getRemainingSearchAttempts())) {
+            if (SearchAction.isAvailable(false, room.getRemainingSearchAttempts())) {
                 actions.add(Action.SEARCH);
             }
             if (HealAction.isAvailable(false, player.getHasKit())) {

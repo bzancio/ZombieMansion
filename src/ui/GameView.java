@@ -8,7 +8,6 @@ import state.GameStatusDTO;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +33,7 @@ public class GameView extends JFrame {
     public GameView() {
         super("La Mansión Zombie v2 - Partida");
         this.setLayout(new BorderLayout(5, 5));
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.actionButtons = new HashMap<>();
 
         this.hpLabel = new JLabel("Vida:");
@@ -108,11 +107,17 @@ public class GameView extends JFrame {
             JButton actionButton = new JButton(action.getLabel());
             actionButton.setPreferredSize(new Dimension(100, 30));
 
-            actionButton.addActionListener(e -> {
-                if (game != null) {
-                    game.performAction(action);
-                }
-            });
+            if (action == Action.FIGHT) {
+                actionButton.addActionListener(e -> {
+                });
+            }
+            else {
+                actionButton.addActionListener(e -> {
+                    if (game != null) {
+                        game.performAction(action);
+                    }
+                });
+            }
             this.actionButtons.put(action, actionButton);
             actionPanel.add(actionButton);
         }
@@ -126,9 +131,7 @@ public class GameView extends JFrame {
         savePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         savePanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         saveButton.setPreferredSize(new Dimension(100, 30));
-        saveButton.addActionListener(e ->  {
-            JOptionPane.showMessageDialog(this, "Not implemented yet");
-        });
+        saveButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Not implemented yet"));
         savePanel.add(saveButton);
         return savePanel;
     }
@@ -147,13 +150,12 @@ public class GameView extends JFrame {
             JButton button = entry.getValue();
 
             boolean isAvailable = gameStatusDTO.availableActions().contains(currentAction);
-
             button.setEnabled(isAvailable);
         }
     }
 
     public void showZombieSpawned(ZombieSpawnInfo zombieSpawnInfo) {
-        JOptionPane.showMessageDialog(null, "Aparece un zombie" , "Zombie", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, zombieSpawnInfo.getZombieNumber() == 1 ? "Aparece un zombie" : "Aparecen dos zombies", "Zombie", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void showAdvanceRoom(RoomAdvanceInfo roomAdvanceInfo) {

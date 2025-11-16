@@ -1,31 +1,19 @@
-import game.Difficulty;
-import game.Game;
 import ui.*;
 
 import javax.swing.*;
 
-public class Main implements MenuDelegate {
+public class Main {
+    private MenuView menuView;
+
     public static void main(String[] args) {
-        Main app = new Main();
-        SwingUtilities.invokeLater(() -> new MenuView(app));
+        SwingUtilities.invokeLater(Main::startGame);
     }
 
-    @Override
-    public void startGame(Difficulty difficulty) {
+    public static void startGame() {
+        MenuView menuView = new MenuView(null);
         GameView gameView = new GameView();
-        ViewController viewController = new ViewController(gameView);
-        Game game = new Game(viewController, difficulty);
-        gameView.setupGameView(game);
-        game.start();
-    }
-
-    @Override
-    public void loadGame() {
-
-    }
-
-    @Override
-    public void viewHistory() {
-
+        ViewController viewController = new ViewController(menuView);
+        menuView.setMenuDelegate(viewController);
+        menuView.setVisible(true);
     }
 }

@@ -42,6 +42,9 @@ public class Game {
             case PLAYER_LOSE -> state = GameState.LOSE;
             case ESCAPED -> state = GameState.WIN;
         }
+        if (state != GameState.PLAYING) {
+            viewController.handleEndGame();
+        }
     }
 
     public void advanceRoom() {
