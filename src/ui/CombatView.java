@@ -10,6 +10,9 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class CombatView extends JDialog {
     private final CombatDelegate combatDelegate;
@@ -20,20 +23,44 @@ public class CombatView extends JDialog {
     private JTextPane playerAttackField;
     private JTextPane zombieAttackField;
     private JTextArea combatLog;
+    private Image backgroundImage;
 
     public CombatView(JFrame owner, CombatDelegate combatDelegate) {
         super(owner, true);
+        this.setTitle("La Mansión Zombie v2 - Combate");
         this.combatDelegate = combatDelegate;
+        loadBackground();
         setupWindow();
         setupListeners();
     }
 
+    private void loadBackground() {
+        try {
+            backgroundImage = ImageIO.read(new File("src/resources/images/combatmenu.jpg"));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     private void setupWindow() {
         this.setDefaultCloseOperation(HIDE_ON_CLOSE);
-        this.setLayout(new BorderLayout(10, 10));
+
+        JPanel backgroundPanel = new JPanel(new BorderLayout(10, 10)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (backgroundImage != null) {
+                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                }
+            }
+        };
+        this.setContentPane(backgroundPanel);
+
         JPanel statusPanel = new JPanel(new GridLayout(5, 2, 10, 5));
+        statusPanel.setOpaque(false);
 
         JLabel playerHpLabel = new JLabel("Vida Jugador:");
+        playerHpLabel.setForeground(Color.WHITE);
         statusPanel.add(playerHpLabel);
         playerHpField = new JTextPane();
         playerHpField.setEditable(false);
@@ -41,6 +68,7 @@ public class CombatView extends JDialog {
         statusPanel.add(playerHpField);
 
         JLabel playerAttackLabel = new JLabel("Jugador ATK:");
+        playerAttackLabel.setForeground(Color.WHITE);
         statusPanel.add(playerAttackLabel);
         playerAttackField = new JTextPane();
         playerAttackField.setEditable(false);
@@ -48,6 +76,7 @@ public class CombatView extends JDialog {
         statusPanel.add(playerAttackField);
 
         JLabel zombieHpLabel = new JLabel("Vida Zombie");
+        zombieHpLabel.setForeground(Color.WHITE);
         statusPanel.add(zombieHpLabel);
         zombieHpField = new JTextPane();
         zombieHpField.setEditable(false);
@@ -55,6 +84,7 @@ public class CombatView extends JDialog {
         statusPanel.add(zombieHpField);
 
         JLabel zombieAttackLabel = new JLabel("Zombie ATK:");
+        zombieAttackLabel.setForeground(Color.WHITE);
         statusPanel.add(zombieAttackLabel);
         zombieAttackField = new JTextPane();
         zombieAttackField.setEditable(false);
@@ -65,19 +95,20 @@ public class CombatView extends JDialog {
         combatLog.setEditable(false);
         combatLog.setFocusable(false);
 
-        this.add(statusPanel, BorderLayout.NORTH);
+        backgroundPanel.add(statusPanel, BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane(combatLog);
-        this.add(scrollPane, BorderLayout.CENTER);
+        backgroundPanel.add(scrollPane, BorderLayout.CENTER);
 
         JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
+        actionPanel.setOpaque(false);
         fightButton = new JButton("Luchar");
         exitButton = new JButton("Terminar");
 
         actionPanel.add(fightButton);
         actionPanel.add(exitButton);
 
-        this.add(actionPanel, BorderLayout.SOUTH);
+        backgroundPanel.add(actionPanel, BorderLayout.SOUTH);
         this.setPreferredSize(new Dimension(500, 300));
         this.pack();
         this.setLocationRelativeTo(getOwner());

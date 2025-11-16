@@ -4,6 +4,9 @@ import game.Difficulty;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class MenuView extends JFrame {
     private MenuDelegate menuDelegate;
@@ -14,12 +17,22 @@ public class MenuView extends JFrame {
     JButton historicButton;
     JComboBox<Difficulty> difficultySelector;
     Dimension buttonSize = new Dimension(150,30);
+    private Image backgroundImage;
 
     public MenuView(MenuDelegate menuDelegate) {
         super("La Mansión Zombie v2 - Menu");
         this.menuDelegate = menuDelegate;
+        loadBackground();
         setupWindow();
         setupListeners();
+    }
+
+    private void loadBackground() {
+        try {
+            backgroundImage = ImageIO.read(new File("src/resources/images/mainmenu.jpg"));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void setMenuDelegate(MenuDelegate menuDelegate) {
@@ -28,9 +41,20 @@ public class MenuView extends JFrame {
 
     public void setupWindow() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.add(panel = new JPanel());
         this.setPreferredSize(new Dimension(600,350));
         this.setResizable(false);
+
+        panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (backgroundImage != null) {
+                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                }
+            }
+        };
+        this.add(panel);
+
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         playButton = new JButton("Jugar");
@@ -40,6 +64,7 @@ public class MenuView extends JFrame {
         difficultySelector.setPreferredSize(buttonSize);
 
         playRowPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 0));
+        playRowPanel.setOpaque(false);
         playRowPanel.add(playButton);
         playRowPanel.add(difficultySelector);
 

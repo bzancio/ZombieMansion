@@ -9,8 +9,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.imageio.ImageIO;
 
 public class GameView extends JFrame {
     private final GameDelegate gameDelegate;
@@ -30,6 +33,7 @@ public class GameView extends JFrame {
     private final JLabel attemptsLabel;
     private final JTextPane attemptsField;
     private final JButton saveButton;
+    private Image backgroundImage;
 
     public GameView(GameDelegate gameDelegate) {
         super("La Mansión Zombie v2 - Partida");
@@ -37,36 +41,66 @@ public class GameView extends JFrame {
         this.setLayout(new BorderLayout(5, 5));
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.actionButtons = new HashMap<>();
+        loadBackground();
 
         this.hpLabel = new JLabel("Vida:");
+        hpLabel.setForeground(Color.WHITE);
         this.hpField = new JTextPane();
 
         this.roomLabel = new JLabel("Sala Actual:");
+        roomLabel.setForeground(Color.white);
         this.roomField = new JTextPane();
 
         this.protectionsNumberLabel = new JLabel("Protecciones:");
+        protectionsNumberLabel.setForeground(Color.white);
         this.protectionsNumberField = new JTextPane();
 
         this.weaponsNumberLabel = new JLabel("Armas:");
+        weaponsNumberLabel.setForeground(Color.white);
         this.weaponsNumberField = new JTextPane();
 
         this.hasKitLabel = new JLabel("Botiquin:");
+        hasKitLabel.setForeground(Color.white);
         this.hasKitField = new JTextPane();
 
         this.zombieLabel = new JLabel("Zombies:");
+        zombieLabel.setForeground(Color.white);
         this.zombieField = new JTextPane();
 
         this.attemptsLabel = new JLabel("Intentos:");
+        attemptsLabel.setForeground(Color.white);
         this.attemptsField = new JTextPane();
 
         this.saveButton = new JButton("Guardar");
     }
 
+    private void loadBackground() {
+        try {
+            backgroundImage = ImageIO.read(new File("src/resources/images/gamemenu.jpeg"));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public void setupWindow() {
         this.setPreferredSize(new Dimension(600, 400));
-        this.add(createSavePanel(), BorderLayout.NORTH);
-        this.add(createStatusPanel(), BorderLayout.CENTER);
-        this.add(createActionPanel(), BorderLayout.SOUTH);
+
+        JPanel backgroundPanel = new JPanel(new BorderLayout(5, 5)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (backgroundImage != null) {
+                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                }
+            }
+        };
+
+        this.setContentPane(backgroundPanel);
+
+        backgroundPanel.add(createSavePanel(), BorderLayout.NORTH);
+        backgroundPanel.add(createStatusPanel(), BorderLayout.CENTER);
+        backgroundPanel.add(createActionPanel(), BorderLayout.SOUTH);
+
         this.pack();
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -75,8 +109,11 @@ public class GameView extends JFrame {
 
     private JPanel createStatusPanel() {
         JPanel outerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        outerPanel.setOpaque(false);
+
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setOpaque(false);
 
         mainPanel.add(createStatusRow(this.hpLabel, this.hpField));
         mainPanel.add(createStatusRow(this.roomLabel, this.roomField));
@@ -92,6 +129,7 @@ public class GameView extends JFrame {
 
     private JPanel createStatusRow(JLabel label, JTextPane field) {
         JPanel rowPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        rowPanel.setOpaque(false);
         field.setPreferredSize(new Dimension(40, 20));
         field.setEditable(false);
         field.setFocusable(false);
@@ -103,6 +141,7 @@ public class GameView extends JFrame {
 
     private JPanel createActionPanel() {
         JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 15));
+        actionPanel.setOpaque(false);
 
         for (Action action : Action.values()) {
             JButton actionButton = getJButton(action);
@@ -139,6 +178,7 @@ public class GameView extends JFrame {
 
     private JPanel createSavePanel() {
         JPanel savePanel = new JPanel();
+        savePanel.setOpaque(false);
         savePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         savePanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         saveButton.setPreferredSize(new Dimension(100, 30));
