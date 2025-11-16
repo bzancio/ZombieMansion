@@ -21,8 +21,8 @@ public class ViewController implements MenuDelegate, GameDelegate, CombatDelegat
 
     public void handleNotification(GameNotification notification) {
         switch (notification.getType()) {
-            case PLAYER_ATTACK -> System.out.println("turno player");//consoleUI.showPlayerAttack((PlayerTurnResult) result);//
-            case ZOMBIE_ATTACK -> System.out.println("turno zombie");//consoleUI.showZombieAttack((ZombieTurnResult) result);
+            case PLAYER_ATTACK -> combatView.updateCombatLog((PlayerAttackInfo) notification);
+            case ZOMBIE_ATTACK -> combatView.updateCombatLog((ZombieAttackInfo)notification);
             case PLAYER_HEALS -> gameView.showDefaultEventInfo("Curación", "Te has curado");
             case ZOMBIE_DEFEAT -> gameView.showDefaultEventInfo("Zombie", "El zombie cae Desplomado");
             case ZOMBIE_SPAWN -> gameView.showZombieSpawned((ZombieSpawnInfo)notification);
@@ -34,7 +34,6 @@ public class ViewController implements MenuDelegate, GameDelegate, CombatDelegat
             case NOISE_IGNORED -> gameView.showDefaultEventInfo("Ruido ignorado", "Tu ruido fue ignorado");
             case ADVANCED_ROOM -> gameView.showAdvanceRoom((RoomAdvanceInfo)notification);
             case ESCAPED -> gameView.showDefaultEventInfo("Escapaste", "Felicidades, has sobrevivido");
-            case PLAYER_LOSE -> gameView.showDefaultEventInfo("Muerte", "Ahora formas parte de la mansión");
             case PLAYER_SEARCHED -> gameView.showDefaultEventInfo("Busqueda", "Empiezas a inspeccionar la habitación");
         }
     }
@@ -53,10 +52,35 @@ public class ViewController implements MenuDelegate, GameDelegate, CombatDelegat
         combatView.updateStatus(gameStatusDTO);
     }
 
-    public void handleEndGame() {
-        combatView = null;
-        gameView.dispose();
+    private void closeGame() {
+        if (gameView != null) {
+            gameView.dispose();
+        }
         menuView.setVisible(true);
+    }
+
+    public void prepareCombatViewForLoss() {
+        if (this.combatView != null) {
+            this.combatView.setupLossListeners();
+        }
+    }
+
+    public void handlePlayerWin() {
+        if (this.combatView != null) {
+            this.combatView.dispose();
+            this.combatView = null;
+        }
+        closeGame();
+    }
+
+    @Override
+    public void handlePlayerLose() {
+        if (combatView != null) {
+            combatView.dispose();
+            this.combatView = null;
+        }
+        gameView.showDefaultEventInfo("Derrota", "ahora formas parte de la mansión");
+        closeGame();
     }
 
     @Override
@@ -87,12 +111,13 @@ public class ViewController implements MenuDelegate, GameDelegate, CombatDelegat
     public void showCombatView() {
         if (this.combatView == null)
             this.combatView = new CombatView(gameView, this);
+        this.combatView.updateStatus(GameStatusDTO.buildFrom(game));
         this.combatView.setVisible(true);
     }
 
     @Override
     public void exitGameView() {
-        handleEndGame();
+        handlePlayerWin();
     }
 
     @Override
@@ -101,7 +126,15 @@ public class ViewController implements MenuDelegate, GameDelegate, CombatDelegat
     }
 
     @Override
-    public void exitCombat() {
-        combatView.dispose();
+    public void exitCombatView() {
+        GameStatusDTO status = GameStatusDTO.buildFrom(game);
+
+        if (this.combatView != null) {
+            this.combatView.setVisible(false);
+        }
+        if (!status.availableActions().contains(Action.FIGHT)) {
+            if ((this.combatView != null))
+                this.combatView.clearCombatLog();
+        }
     }
 }

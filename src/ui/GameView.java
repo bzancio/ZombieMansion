@@ -109,9 +109,7 @@ public class GameView extends JFrame {
             actionButton.setPreferredSize(new Dimension(100, 30));
 
             if (action == Action.FIGHT) {
-                actionButton.addActionListener(e -> {
-                    gameDelegate.showCombatView();
-                });
+                actionButton.addActionListener(e -> gameDelegate.showCombatView());
             }
             else {
                 actionButton.addActionListener(e -> {

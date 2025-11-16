@@ -39,14 +39,14 @@ public class FightAction implements ActionStrategy {
         int roll = ThreadLocalRandom.current().nextInt(1, player.getAttackPoints() + 1);
         int damage = roll + player.getNumberWeapons();
         zombie.takeDamage(damage);
-        return new PlayerAttackInfo(damage, zombie.getHp());
+        return new PlayerAttackInfo(damage);
     }
 
     private GameNotification zombieTurn(Zombie zombie, Player player) {
         int roll = ThreadLocalRandom.current().nextInt(1, zombie.getAttackPoints()) + 1;
         int damage = Math.max(0, (roll - player.getNumberProtections()));
         player.takeDamage(damage);
-        return new ZombieAttackInfo(damage, player.getHp());
+        return new ZombieAttackInfo(damage);
     }
 
     public static boolean isAvailable(boolean roomHasZombies) {

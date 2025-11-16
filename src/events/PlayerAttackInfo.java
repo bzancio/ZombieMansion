@@ -2,10 +2,9 @@ package events;
 
 public class PlayerAttackInfo extends GameNotification {
     private final int damage;
-    private final int hp;
-    public PlayerAttackInfo(int damage, int hp) {
+
+    public PlayerAttackInfo(int damage) {
         this.damage = damage;
-        this.hp = hp;
     }
 
     @Override
@@ -15,9 +14,5 @@ public class PlayerAttackInfo extends GameNotification {
 
     public int getDamage() {
         return damage;
-    }
-
-    public int getHp() {
-        return hp;
     }
 }

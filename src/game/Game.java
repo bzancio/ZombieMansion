@@ -47,8 +47,13 @@ public class Game {
         }
         if (state != GameState.PLAYING) {
             viewController.handleCombatStatusUpdate(createGameStatusDTO());
+
+            if (state == GameState.LOSE) {
+                viewController.prepareCombatViewForLoss();
+                return;
+            }
             viewController.handleStatusUpdate(createGameStatusDTO());
-            viewController.handleEndGame();
+            viewController.handlePlayerWin();
         }
     }
 
