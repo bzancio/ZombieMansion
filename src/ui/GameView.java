@@ -3,16 +3,17 @@ package ui;
 import actions.Action;
 import events.RoomAdvanceInfo;
 import events.ZombieSpawnInfo;
-import game.Game;
 import state.GameStatusDTO;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GameView extends JFrame {
-    private Game game;
+    private final GameDelegate gameDelegate;
     private final Map<actions.Action, JButton> actionButtons;
     private final JLabel hpLabel;
     private final JTextPane hpField;
@@ -30,10 +31,11 @@ public class GameView extends JFrame {
     private final JTextPane attemptsField;
     private final JButton saveButton;
 
-    public GameView() {
+    public GameView(GameDelegate gameDelegate) {
         super("La Mansión Zombie v2 - Partida");
+        this.gameDelegate = gameDelegate;
         this.setLayout(new BorderLayout(5, 5));
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.actionButtons = new HashMap<>();
 
         this.hpLabel = new JLabel("Vida:");
@@ -60,8 +62,7 @@ public class GameView extends JFrame {
         this.saveButton = new JButton("Guardar");
     }
 
-    public void setupGameView(Game game) {
-        this.game = game;
+    public void setupWindow() {
         this.setPreferredSize(new Dimension(600, 400));
         this.add(createSavePanel(), BorderLayout.NORTH);
         this.add(createStatusPanel(), BorderLayout.CENTER);
@@ -109,12 +110,13 @@ public class GameView extends JFrame {
 
             if (action == Action.FIGHT) {
                 actionButton.addActionListener(e -> {
+                    gameDelegate.showCombatView();
                 });
             }
             else {
                 actionButton.addActionListener(e -> {
-                    if (game != null) {
-                        game.performAction(action);
+                    if (gameDelegate != null) {
+                        gameDelegate.handleGameAction(action);
                     }
                 });
             }
@@ -123,6 +125,12 @@ public class GameView extends JFrame {
         }
 
         actionPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                gameDelegate.exitGameView();
+            }
+        });
         return actionPanel;
     }
 

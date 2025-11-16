@@ -3,7 +3,7 @@ package ui;
 import game.Difficulty;
 
 public interface MenuDelegate {
-    void startGame(Difficulty difficulty);
+    void showGameView(Difficulty difficulty);
     void loadGame();
     void viewHistory();
 }

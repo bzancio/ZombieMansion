@@ -32,7 +32,10 @@ public class Game {
             List<GameNotification> results = strategy.execute();
             viewController.handleAllNotifications(results);
             processActionResults(results);
+            if (state != GameState.PLAYING)
+                return;
             viewController.handleStatusUpdate(createGameStatusDTO());
+            viewController.handleCombatStatusUpdate(createGameStatusDTO());
         }
     }
 
@@ -43,6 +46,8 @@ public class Game {
             case ESCAPED -> state = GameState.WIN;
         }
         if (state != GameState.PLAYING) {
+            viewController.handleCombatStatusUpdate(createGameStatusDTO());
+            viewController.handleStatusUpdate(createGameStatusDTO());
             viewController.handleEndGame();
         }
     }

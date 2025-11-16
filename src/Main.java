@@ -11,9 +11,6 @@ public class Main {
 
     public static void startGame() {
         MenuView menuView = new MenuView(null);
-        GameView gameView = new GameView();
         ViewController viewController = new ViewController(menuView);
-        menuView.setMenuDelegate(viewController);
-        menuView.setVisible(true);
     }
 }

@@ -71,8 +71,7 @@ public class MenuView extends JFrame {
         playButton.addActionListener(e -> {
             Difficulty selectedDifficulty = (Difficulty)difficultySelector.getSelectedItem();
             this.setVisible(false);
-            this.dispose();
-            menuDelegate.startGame(selectedDifficulty);
+            menuDelegate.showGameView(selectedDifficulty);
         });
 
         loadButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Not implemented yet"));

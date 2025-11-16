@@ -1,5 +1,6 @@
 package ui;
 
+import actions.Action;
 import events.*;
 import game.Difficulty;
 import game.Game;
@@ -7,13 +8,15 @@ import state.GameStatusDTO;
 
 import java.util.List;
 
-public class ViewController implements MenuDelegate {
+public class ViewController implements MenuDelegate, GameDelegate, CombatDelegate {
     private final MenuView menuView;
     private GameView gameView;
+    private CombatView combatView;
     private Game game;
 
     public ViewController(MenuView menuView) {
         this.menuView = menuView;
+        menuView.setMenuDelegate(this);
     }
 
     public void handleNotification(GameNotification notification) {
@@ -46,17 +49,23 @@ public class ViewController implements MenuDelegate {
         gameView.updateStatus(gameStatusDTO);
     }
 
+    public void handleCombatStatusUpdate(GameStatusDTO gameStatusDTO) {
+        combatView.updateStatus(gameStatusDTO);
+    }
+
     public void handleEndGame() {
+        combatView = null;
         gameView.dispose();
         menuView.setVisible(true);
     }
 
     @Override
-    public void startGame(Difficulty difficulty) {
+    public void showGameView(Difficulty difficulty) {
         menuView.setVisible(false);
-        this.gameView = new GameView();
+        this.gameView = new GameView(this);
         this.game = new Game(this, difficulty);
-        gameView.setupGameView(game);
+        gameView.setupWindow();
+        game.start();
     }
 
     @Override
@@ -67,5 +76,32 @@ public class ViewController implements MenuDelegate {
     @Override
     public void viewHistory() {
 
+    }
+
+    @Override
+    public void handleGameAction(Action action) {
+        game.performAction(action);
+    }
+
+    @Override
+    public void showCombatView() {
+        if (this.combatView == null)
+            this.combatView = new CombatView(gameView, this);
+        this.combatView.setVisible(true);
+    }
+
+    @Override
+    public void exitGameView() {
+        handleEndGame();
+    }
+
+    @Override
+    public void performCombatTurn() {
+        game.performAction(Action.FIGHT);
+    }
+
+    @Override
+    public void exitCombat() {
+        combatView.dispose();
     }
 }
