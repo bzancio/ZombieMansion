@@ -1,1 +1,3 @@
 # ZombieMansion
+work in progress
+Un trabajo de clase que se me fue de las manos...
