@@ -2,8 +2,7 @@ package ui;
 
 import actions.Action;
 import events.*;
-import game.Difficulty;
-import game.Game;
+import game.*;
 import persistence.GameSaver;
 import state.GameStatusDTO;
 
@@ -11,29 +10,31 @@ import java.util.List;
 
 public class ViewController implements MenuDelegate, GameDelegate, CombatDelegate {
     private final MenuView menuView;
+    private final GameService gameService;
     private GameView gameView;
     private CombatView combatView;
     private Game game;
 
     public ViewController(MenuView menuView) {
         this.menuView = menuView;
+        this.gameService = new GameService();
         menuView.setMenuDelegate(this);
     }
 
     public void handleNotification(GameNotification notification) {
         switch (notification.getType()) {
-            case PLAYER_ATTACK -> combatView.updateCombatLog((PlayerAttackInfo)notification);
-            case ZOMBIE_ATTACK -> combatView.updateCombatLog((ZombieAttackInfo)notification);
+            case PLAYER_ATTACK -> combatView.updateCombatLog((PlayerAttackInfo) notification);
+            case ZOMBIE_ATTACK -> combatView.updateCombatLog((ZombieAttackInfo) notification);
             case PLAYER_HEALS -> gameView.showDefaultEventInfo("Curación", "Te has curado");
             case ZOMBIE_DEFEAT -> gameView.showDefaultEventInfo("Zombie", "El zombie cae Desplomado");
-            case ZOMBIE_SPAWN -> gameView.showZombieSpawned((ZombieSpawnInfo)notification);
+            case ZOMBIE_SPAWN -> gameView.showZombieSpawned((ZombieSpawnInfo) notification);
             case KIT_FOUND -> gameView.showDefaultEventInfo("Kit", "Has encontrado un kit");
             case KIT_FULL -> gameView.showDefaultEventInfo("Kit", "Ya tienes un kit");
             case WEAPON_FOUND -> gameView.showDefaultEventInfo("Arma", "Has encontrado un arma");
             case PROTECTION_FOUND -> gameView.showDefaultEventInfo("Proteccion", "Has encontrado una proteccion");
             case SEARCH_NOISE -> gameView.showDefaultEventInfo("Ruido", "Upps hiciste ruido");
             case NOISE_IGNORED -> gameView.showDefaultEventInfo("Ruido ignorado", "Tu ruido fue ignorado");
-            case ADVANCED_ROOM -> gameView.showAdvanceRoom((RoomAdvanceInfo)notification);
+            case ADVANCED_ROOM -> gameView.showAdvanceRoom((RoomAdvanceInfo) notification);
             case ESCAPED -> gameView.showDefaultEventInfo("Escapaste", "Felicidades, has sobrevivido");
             case PLAYER_SEARCHED -> gameView.showDefaultEventInfo("Busqueda", "Empiezas a inspeccionar la habitación");
         }
@@ -89,9 +90,9 @@ public class ViewController implements MenuDelegate, GameDelegate, CombatDelegat
     public void showGameView(Difficulty difficulty) {
         menuView.setVisible(false);
         this.gameView = new GameView(this);
-        this.game = new Game(this, difficulty);
+        this.game = new Game(difficulty);
         gameView.setupWindow();
-        game.start();
+        handleStatusUpdate(gameService.start(game).status());
     }
 
     @Override
@@ -100,7 +101,6 @@ public class ViewController implements MenuDelegate, GameDelegate, CombatDelegat
         if (loadedGame != null) {
             menuView.setVisible(false);
             this.game = loadedGame;
-            this.game.setViewController(this);
 
             this.gameView = new GameView(this);
             this.gameView.setupWindow();
@@ -123,7 +123,7 @@ public class ViewController implements MenuDelegate, GameDelegate, CombatDelegat
 
     @Override
     public void handleGameAction(Action action) {
-        game.performAction(action);
+        applyTurnResult(gameService.performAction(game, action));
     }
 
     @Override
@@ -149,7 +149,7 @@ public class ViewController implements MenuDelegate, GameDelegate, CombatDelegat
 
     @Override
     public void performCombatTurn() {
-        game.performAction(Action.FIGHT);
+        applyTurnResult(gameService.performAction(game, Action.FIGHT));
     }
 
     @Override
@@ -163,5 +163,27 @@ public class ViewController implements MenuDelegate, GameDelegate, CombatDelegat
             if ((this.combatView != null))
                 this.combatView.clearCombatLog();
         }
+    }
+
+    private void applyTurnResult(TurnResult turnResult) {
+        handleAllNotifications(turnResult.notifications());
+
+        if (!turnResult.isFinished()) {
+            handleStatusUpdate(turnResult.status());
+            handleCombatStatusUpdate(turnResult.status());
+            return;
+        }
+
+        handleCombatStatusUpdate(turnResult.status());
+
+        if (turnResult.state() == GameState.LOSE) {
+            prepareCombatViewForLoss();
+            GameSaver.saveSnapshot(turnResult.status());
+            return;
+        }
+
+        handleStatusUpdate(turnResult.status());
+        GameSaver.saveSnapshot(turnResult.status());
+        handlePlayerWin();
     }
 }

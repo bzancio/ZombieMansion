@@ -1,17 +1,10 @@
 package state;
 
 import actions.Action;
-import actions.AdvanceAction;
-import actions.EscapeAction;
-import actions.FightAction;
-import actions.HealAction;
-import actions.SearchAction;
+import actions.ActionAvailabilityPolicy;
 import game.Game;
-import game.Player;
-import game.Room;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public record GameStatusDTO(int currentRoomNumber, int playerHp, int playerMaxHp, int playerAttackPoints,
@@ -28,7 +21,7 @@ public record GameStatusDTO(int currentRoomNumber, int playerHp, int playerMaxHp
             zombieAttackPoints = game.getRoom().getZombieArray().getFirst().getAttackPoints();
         }
 
-        List<Action> availableActions = calculateAvailableActions(game);
+        List<Action> availableActions = ActionAvailabilityPolicy.calculate(game);
 
         return new GameStatusDTO(
                 game.getRoom().getRoomNumber(),
@@ -45,34 +38,5 @@ public record GameStatusDTO(int currentRoomNumber, int playerHp, int playerMaxHp
                 zombieAttackPoints,
                 availableActions
         );
-    }
-
-    private static List<Action> calculateAvailableActions(Game game) {
-        List<Action> actions = new ArrayList<>();
-
-        Room room = game.getRoom();
-        Player player = game.getPlayer();
-        boolean roomHasZombies = room.hasActiveZombies();
-        int maxRooms = game.getDifficulty().getRoomNumber();
-        int currentRoom = room.getRoomNumber();
-
-        if (FightAction.isAvailable(roomHasZombies)) {
-            actions.add(Action.FIGHT);
-        } else {
-            if (SearchAction.isAvailable(false, room.getRemainingSearchAttempts())) {
-                actions.add(Action.SEARCH);
-            }
-            if (HealAction.isAvailable(false, player.getHasKit())) {
-                actions.add(Action.HEAL);
-            }
-            if (AdvanceAction.isAvailable(false, currentRoom, maxRooms)) {
-                actions.add(Action.ADVANCE);
-            }
-            if (EscapeAction.isAvailable(false, currentRoom, maxRooms)) {
-                actions.add(Action.ESCAPE);
-            }
-        }
-
-        return actions;
     }
 }
